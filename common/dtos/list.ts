@@ -4,13 +4,21 @@ export const search_list_dto = z.object({
   term: z.string().min(3).max(64),
 });
 
+const isUrl = (url: string) => {
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 export const create_list_dto = z.object({
   name: z.string().min(4).max(48),
   description: z.string().min(4).max(255),
   thumbnail: z
     .string()
-    .url()
-    .transform((x) => (x.length === 0 ? undefined : x))
+    .refine((x) => !x || x.length === 0 || isUrl(x))
     .optional(),
   places: z
     .array(
@@ -19,13 +27,11 @@ export const create_list_dto = z.object({
         description: z.string().min(4).max(255),
         thumbnail: z
           .string()
-          .url()
-          .transform((x) => (x.length === 0 ? undefined : x))
+          .refine((x) => !x || x.length === 0 || isUrl(x))
           .optional(),
         banner: z
           .string()
-          .url()
-          .transform((x) => (x.length === 0 ? undefined : x))
+          .refine((x) => !x || x.length === 0 || isUrl(x))
           .optional(),
         lat: z.number().min(-90).max(90),
         lon: z.number().min(-180).max(180),
