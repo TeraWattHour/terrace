@@ -1,17 +1,9 @@
 import { z } from "zod";
+import { isUrl } from "../utils/isUrl";
 
 export const search_list_dto = z.object({
   term: z.string().min(3).max(64),
 });
-
-const isUrl = (url: string) => {
-  try {
-    new URL(url);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
 
 export const create_list_dto = z.object({
   name: z.string().min(4).max(48),
